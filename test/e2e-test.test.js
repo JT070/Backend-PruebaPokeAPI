@@ -10,10 +10,34 @@ describe('Suite de prueba e2e', () => {
         chai.request(app)
             .get('/')
             .end( (err, res) => {
-                console.log('A')
                 chai.assert.equal(res.text, 'Hello World!')
                 done();
             });
-        console.log('B');
+    });
+});
+
+describe('Suite de pruebas AUTH', () => {
+    it('Should return 401 when no JWT token available', (done) => {
+        // Cuando la llamada no tiene correctamente la llave
+        chai.request(app)
+            .get('/team')
+            .end( (err,res) => {
+                chai.assert.equal(res.statusCode, 401);
+                done();
+            });
+    });
+    it('Should return 200 when no JWT is valid', (done) => {
+        // Vamos a usar una validación HEADER despues de hacer un LOGIN
+        chai.request(app)
+            .post('login')
+            .end( (err, res) => {
+                chai.request(app)
+                .get('/team')
+                .set('Authorization', `JWT ${res.body.token}`)
+                .end( (err,res) => {
+                    chai.assert.equal(res.statusCode, 200);
+                    done();
+                });
+            })
     });
 });

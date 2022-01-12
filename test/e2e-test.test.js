@@ -29,7 +29,7 @@ describe('Suite de pruebas AUTH', () => {
     it('Should return 200 when no JWT is valid', (done) => {
         // Vamos a usar una validación HEADER despues de hacer un LOGIN
         chai.request(app)
-            .post('login')
+            .post('/login')
             .end( (err, res) => {
                 chai.request(app)
                 .get('/team')
@@ -38,6 +38,6 @@ describe('Suite de pruebas AUTH', () => {
                     chai.assert.equal(res.statusCode, 200);
                     done();
                 });
-            })
+            });
     });
 });

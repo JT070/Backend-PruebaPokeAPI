@@ -1,5 +1,5 @@
 const uuid = require('uuid');
-const crypt = require('./crypt.js');
+const crypt = require('../crypt.js');
 
 const userDatabase = {
     '0001': {

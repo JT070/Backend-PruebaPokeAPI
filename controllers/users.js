@@ -1,5 +1,6 @@
 const uuid = require('uuid');
 const crypt = require('../crypt.js');
+const teams = require('./teams');
 
 const userDatabase = {};
 // UserId -> password
@@ -9,10 +10,16 @@ const registerUser = (userName, password) => {
     console.log('___ Esta es la CONTRASEÑA HASHEADA: ');
     console.log(hashedPwd);
     // Guardar en la base de datos nuestro usuario
-    userDatabase[uuid.v4()] = {
+    let userId = uuid.v4();
+    userDatabase[userId] = {
         userName: userName,
         password: hashedPwd,
     }
+    teams.bootstrapTeam(userId);
+}
+
+const getUser = (userId) => {
+    return userDatabase[userId];
 }
 
 const getUserIdFromUserName = (userName) => {
@@ -31,9 +38,11 @@ const checkUserCredentials = (userName, password, done) => {
         console.log(user);
         crypt.comparePassword(password, user.password, done);
     } else {
-        done('Missing user :(');
+        done('Missing user');
     }
 }
 
 exports.registerUser = registerUser;
 exports.checkUserCredentials = checkUserCredentials;
+exports.getUser = getUser;
+exports.getUserIdFromUserName = getUserIdFromUserName;

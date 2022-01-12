@@ -8,9 +8,8 @@ const teamsRoutes = require('./routers/teams').router;
 // require('./auth')(passport);
 const app = express();
 app.use(bodyParser.json()); 
+
 const port = 3001;
-
-
 
 app.get('/', (req, res) => {
     res.status(200).send('Hello World!');
@@ -18,8 +17,6 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/teams', teamsRoutes);
-
-
 
 app.listen(port, () => {
     console.log('Server started at port: 3001');

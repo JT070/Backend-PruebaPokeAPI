@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 // Controllers
-const usersController = require('../controllers/users');
+const usersController = require('./users.controller');
 usersController.registerUser('jamon', '12345');
 usersController.registerUser('monja', '54321'); 
 

@@ -1,6 +1,6 @@
 const uuid = require('uuid');
-const crypt = require('../crypt.js');
-const teams = require('./teams');
+const crypt = require('../tools/crypt.js');
+const teams = require('../teams/teams.controller');
 
 const userDatabase = {};
 // UserId -> password

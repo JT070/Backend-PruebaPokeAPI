@@ -1,15 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser'); // Es un Plugin de Express
-
+const middlewares = require('./middlewares');
 // Rutas
 const authRoutes = require('./auth/auth.router').router;
 const teamsRoutes = require('./teams/teams.router').router;
 
-// require('./auth')(passport);
 const app = express();
-app.use(bodyParser.json()); 
 
 const port = 3001;
+
+middlewares.setupMiddlewares(app);
 
 app.get('/', (req, res) => {
     res.status(200).send('Hello World!');

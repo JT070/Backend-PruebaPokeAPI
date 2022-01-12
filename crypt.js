@@ -10,6 +10,7 @@ const hashPasswordSync = (plainTextPwd) => {
 
 const comparePassword = (plainPassword, hashPassword, done) => {
     //Función sacada de la documentación
+    console.log(`===== PSWRD PLANO: ${plainPassword} ====== HASHED PSWRD: ${hashPassword}`);
     bcrypt.compare(plainPassword, hashPassword, done);
 }
 

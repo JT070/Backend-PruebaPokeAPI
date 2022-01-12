@@ -6,10 +6,12 @@ const userDatabase = {};
 
 const registerUser = (userName, password) => {
     let hashedPwd = crypt.hashPasswordSync(password);
+    console.log('___ Esta es la CONTRASEÑA HASHEADA: ');
+    console.log(hashedPwd);
     // Guardar en la base de datos nuestro usuario
     userDatabase[uuid.v4()] = {
         userName: userName,
-        password: result,
+        password: hashedPwd,
     }
 }
 
@@ -33,3 +35,5 @@ const checkUserCredentials = (userName, password, done) => {
     }
 }
 
+exports.registerUser = registerUser;
+exports.checkUserCredentials = checkUserCredentials;

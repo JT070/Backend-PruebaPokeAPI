@@ -2,10 +2,18 @@ const chai = require('chai');
 const chaiHttp = require ('chai-http');
 
 chai.use(chaiHttp);
-
+const usersController = require('../auth/users.controller');
 const app = require('../app').app;
 
+before((done) => {
+    usersController.registerUser('jamon', '12345');
+    usersController.registerUser('monja', '54321');
+    done();
+})
+
+
 describe('SUITE DE PRUEBAS DE AUTENTICACION', () => {
+
     it('Should return 401 when no JWT token available', (done) => {
         // Cuando la llamada no tiene correctamente la llave
         chai.request(app)
@@ -42,7 +50,7 @@ describe('SUITE DE PRUEBAS DE AUTENTICACION', () => {
         chai.request(app)
             .post('/auth/login')
             .set('content-type', 'application/json')
-            .send({user: 'monja', password: '54321'})
+            .send({user: 'jamon', password: '12345'})
             .end((err, res) => {
                 // Expect valid login
                 chai.assert.equal(res.statusCode, 200);
@@ -56,4 +64,9 @@ describe('SUITE DE PRUEBAS DE AUTENTICACION', () => {
             });
     });
 
+});
+
+after((done) => {
+    usersController.cleanUpUsers();
+    done();
 });

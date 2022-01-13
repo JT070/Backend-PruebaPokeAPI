@@ -1,4 +1,4 @@
-const teamsDatabase = {};
+let teamsDatabase = {};
 
 const cleanUpTeam = () => {
     return new Promise((resolve, reject) => {
@@ -51,9 +51,9 @@ const setTeam = (userId, team) => {
     
 }
 
-exports.cleanUpTeam = cleanUpTeam;
 exports.bootstrapTeam = bootstrapTeam;
-exports.getTeamOfUser = getTeamOfUser;
-exports.deletePokemonAt = deletePokemonAt;
 exports.addPokemon = addPokemon;
 exports.setTeam = setTeam;
+exports.getTeamOfUser = getTeamOfUser;
+exports.cleanUpTeam = cleanUpTeam;
+exports.deletePokemonAt = deletePokemonAt;

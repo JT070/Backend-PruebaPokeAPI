@@ -1,9 +1,9 @@
 const uuid = require('uuid');
-const crypt = require('../tools/crypt.js');
+const crypto = require('../tools/crypto.js');
 const teams = require('../teams/teams.controller');
 
-const userDatabase = {};
-// UserId -> password
+let userDatabase = {};
+// userId -> userData
 
 const cleanUpUsers = () => {
     return new Promise((resolve, reject) => {
@@ -26,11 +26,11 @@ const registerUser = (userName, password) => {
     });
 }
 
-registerUser('jamoncito', '551100');
+registerUser('bettatech', '1234');
 
 const getUser = (userId) => {
-    return new Promise((res, rej) => {
-        res(userDatabase[userId]);
+    return new Promise((resolve, reject) => {
+        resolve(userDatabase[userId]);
     });
 }
 
@@ -40,7 +40,7 @@ const getUserIdFromUserName = (userName) => {
             if (userDatabase[user].userName == userName) {
                 let userData = userDatabase[user];
                 userData.userId = user;
-                return resolve(userData);;
+                return resolve(userData);
             }
         }
         reject('No user found');
@@ -63,9 +63,8 @@ const checkUserCredentials = (userName, password) => {
         }
     });
 }
-
 exports.registerUser = registerUser;
 exports.checkUserCredentials = checkUserCredentials;
-exports.getUser = getUser;
 exports.getUserIdFromUserName = getUserIdFromUserName;
+exports.getUser = getUser;
 exports.cleanUpUsers = cleanUpUsers;

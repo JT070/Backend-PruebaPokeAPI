@@ -6,5 +6,4 @@ const setupMiddlewares = (app) => {
     authmiddleware.init();
     app.use(authmiddleware.protectWithJwt);
 }
-
 exports.setupMiddlewares = setupMiddlewares;

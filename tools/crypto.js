@@ -10,7 +10,7 @@ const hashPasswordSync = (plainTextPwd) => {
 
 const comparePassword = (plainPassword, hashPassword, done) => {
     bcrypt.compare(plainPassword, hashPassword, done);
-}
+};
 
 exports.hashPassword = hashPassword;
 exports.hashPasswordSync = hashPasswordSync;

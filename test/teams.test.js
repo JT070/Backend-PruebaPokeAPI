@@ -8,26 +8,26 @@ const teamsController = require('../teams/teams.controller');
 const app = require('../app').app;
 
 before((done) => {
-    usersController.registerUser('jamon' , '12345');
-    usersController.registerUser('monja' , '54321');
+    usersController.registerUser('bettatech', '1234');
+    usersController.registerUser('mastermind', '4321');
     done();
-});
+})
 
 afterEach(async () => {
     await teamsController.cleanUpTeam();
 })
 
-describe('SUITE DE PRUEBAS DE TEAMS', () => {
-    it('Should return the TEAM of the given user', (done) => {
-        // cuando la llamada no tiene correctamente la llave
-        let team = [{name: 'Charizard'}, {name: 'Blastoise'}];
+describe('Suite de pruebas teams', () => {
+    it('should return the team of the given user', (done) => {
+        // Cuando la llamada no tiene correctamente la llave
+        let team = [{name: 'Charizard'}, {name: 'Blastoise'}, {name: 'Pikachu'}];
         chai.request(app)
             .post('/auth/login')
             .set('content-type', 'application/json')
-            .send({user: 'monja', password: '54321'})
+            .send({user: 'mastermind', password: '4321'})
             .end((err, res) => {
                 let token = res.body.token;
-                // Expect valid login
+                //Expect valid login
                 chai.assert.equal(res.statusCode, 200);
                 chai.request(app)
                     .put('/teams')
@@ -36,89 +36,127 @@ describe('SUITE DE PRUEBAS DE TEAMS', () => {
                     })
                     .set('Authorization', `JWT ${token}`)
                     .end((err, res) => {
-                        chai.assert.equal(res.statusCode, 200);
-                            chai.request(app)
-                                .get('/teams')
-                                .set('Authorization', `JWT ${token}`)
-                                .end((err, res => {
-                                    // Tiene equipo con Charizard y Blastoise
-                                    // {trainer : 'monja', team: [Pokemones]}
-                                    chai.assert.equal(res.statusCode, 200);
-                                    chai.assert.equal(res.body.trainer, 'monja');
-                                    chai.assert.equal(res.body.team.length, team.length);
-                                    chai.assert.equal(res.body.team[0].name, team[0].name);
-                                    chai.assert.equal(res.body.team[0].name, team[1].name);
-                                    done();
-                                }))
+                        chai.request(app)
+                            .get('/teams')
+                            .set('Authorization', `JWT ${token}`)
+                            .end((err, res) => {
+                                // tiene equipo con Charizard y Blastoise
+                                // { trainer: 'mastermind', team: [Pokemon]}
+                                chai.assert.equal(res.statusCode, 200);
+                                chai.assert.equal(res.body.trainer, 'mastermind');
+                                chai.assert.equal(res.body.team.length, team.length);
+                                chai.assert.equal(res.body.team[0].name, team[0].name);
+                                chai.assert.equal(res.body.team[1].name, team[1].name);
+                                done();
+                            });
                     });
             });
     });
 
-    it('Should return the Pokedex Number', (done) => {
-        // cuando la llamada no tiene correctamente la llave
+    it('should return the pokedex number', (done) => {
+        let team = [{name: 'Charizard'}, {name: 'Blastoise'}, {name: 'Pikachu'}];
+        chai.request(app)
+            .post('/auth/login')
+            .set('content-type', 'application/json')
+            .send({user: 'mastermind', password: '4321'})
+            .end((err, res) => {
+                let token = res.body.token;
+                //Expect valid login
+                chai.assert.equal(res.statusCode, 200);
+                chai.request(app)
+                    .put('/teams')
+                    .send({team: team})
+                    .set('Authorization', `JWT ${token}`)
+                    .end((err, res) => {
+                        chai.request(app)
+                            .delete('/teams/pokemons/1')
+                            .set('Authorization', `JWT ${token}`)
+                            .end((err, res) => {
+                                chai.request(app)
+                                    .get('/teams')
+                                    .set('Authorization', `JWT ${token}`)
+                                    .end((err, res) => {
+                                        // tiene equipo con Charizard y Blastoise
+                                        // { trainer: 'mastermind', team: [Pokemon]}
+                                        chai.assert.equal(res.statusCode, 200);
+                                        chai.assert.equal(res.body.trainer, 'mastermind');
+                                        chai.assert.equal(res.body.team.length, team.length - 1);
+                                        done();
+                                    });
+                            });
+                    });
+            });
+    });
+
+    it('should remove the pokemon at index', (done) => {
+        // Cuando la llamada no tiene correctamente la llave
         let pokemonName = 'Bulbasaur';
         chai.request(app)
             .post('/auth/login')
             .set('content-type', 'application/json')
-            .send({user: 'jamon', password: '12345'})
+            .send({user: 'mastermind', password: '4321'})
             .end((err, res) => {
                 let token = res.body.token;
-                // Expect valid login
+                //Expect valid login
                 chai.assert.equal(res.statusCode, 200);
                 chai.request(app)
                     .post('/teams/pokemons')
                     .send({name: pokemonName})
                     .set('Authorization', `JWT ${token}`)
                     .end((err, res) => {
-                        chai.assert.equal(res.statusCode, 200);
-                            chai.request(app)
-                                .get('/teams')
-                                .set('Authorization', `JWT ${token}`)
-                                .end((err, res => {
-                                    chai.assert.equal(res.statusCode, 200);
-                                    chai.assert.equal(res.body.trainer, 'monja');
-                                    chai.assert.equal(res.body.team.length, 1);
-                                    chai.assert.equal(res.body.team[0].name, pokemonName);
-                                    chai.assert.equal(res.body.team[0].pokedexNumber, 1);
-                                    done();
-                                }))
+                        chai.request(app)
+                            .get('/teams')
+                            .set('Authorization', `JWT ${token}`)
+                            .end((err, res) => {
+                                // tiene equipo con Charizard y Blastoise
+                                // { trainer: 'mastermind', team: [Pokemon]}
+                                chai.assert.equal(res.statusCode, 200);
+                                chai.assert.equal(res.body.trainer, 'mastermind');
+                                chai.assert.equal(res.body.team.length, 1);
+                                chai.assert.equal(res.body.team[0].name, pokemonName);
+                                chai.assert.equal(res.body.team[0].pokedexNumber, 1);
+                                done();
+                            });
                     });
             });
     });
 
-
-    it('Should not be able to add pokemon if you already have 6', (done) => {
+    it('should not be able to add pokemon if you already have 6', (done) => {
         let team = [
-            {name: 'Bulbasaur'},
-            {name: 'Charizard'},
-            {name: 'Lapras'},
+            {name: 'Charizard'}, 
+            {name: 'Blastoise'}, 
             {name: 'Pikachu'},
-            {name: 'Blastoise'},
-            {name: 'Gengar'},
-        ];
+            {name: 'Charizard'}, 
+            {name: 'Blastoise'}, 
+            {name: 'Pikachu'}];
         chai.request(app)
             .post('/auth/login')
             .set('content-type', 'application/json')
-            .send({user: 'jamon', password: '12345'})
+            .send({user: 'mastermind', password: '4321'})
             .end((err, res) => {
                 let token = res.body.token;
-                // Expect valid login
+                //Expect valid login
                 chai.assert.equal(res.statusCode, 200);
                 chai.request(app)
-                    .post('/teams')
-                    .send({name: pokemonName})
+                    .put('/teams')
+                    .send({team: team})
                     .set('Authorization', `JWT ${token}`)
                     .end((err, res) => {
                         chai.request(app)
-                            .post('/teams')
-                            .send({name: 'Raychu'})
+                            .post('/teams/pokemons')
+                            .send({name: 'Vibrava'})
                             .set('Authorization', `JWT ${token}`)
-                            .end((err, res => {
+                            .end((err, res) => {
                                 chai.assert.equal(res.statusCode, 400);
-                            }))
-                            
+                                done();
+                            });
                     });
             });
     });
+
 });
 
+after((done) => {
+    usersController.cleanUpUsers();
+    done();
+});

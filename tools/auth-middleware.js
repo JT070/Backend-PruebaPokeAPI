@@ -1,12 +1,11 @@
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+const JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
 const passport = require('passport');
 
 const init = () => {
-    // Se ejecuta cuando se enciende el servicio
     const opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("JWT"),
-        secretOrKey: 'secretPassword',
+        secretOrKey: 'secretPassword' //TODO deberia estar en una variable de entorno
     }
     passport.use(new JwtStrategy(opts, (decoded, done) => {
         return done(null, decoded);
@@ -15,9 +14,9 @@ const init = () => {
 
 const protectWithJwt = (req, res, next) => {
     if (req.path == '/' || req.path == '/auth/login') {
-        return next(); // Para dejas pasar la petición y no hacer nada
+        return next();
     }
-    return passport.authenticate('jwt', {session: false})(req, res, next);
+    return passport.authenticate('jwt', { session: false })(req, res, next);
 }
 
 exports.init = init;

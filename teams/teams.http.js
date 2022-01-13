@@ -3,20 +3,21 @@ const teamsController = require('./teams.controller');
 const { getUser } = require('../auth/users.controller');
 const { to } = require('../tools/to');
 
+
 const getTeamFromUser = async (req, res) => {
     let user = await getUser(req.user.userId);
-    let [teamErr, team] = await to(teamsController.getOfFromUser(req.user.userId));
+    let [teamErr, team] = await to(teamsController.getTeamOfUser(req.user.userId));
     if (teamErr) {
-        return res.status(400).json({message: teamErr});
+        return res.status(400).json({message: err});
     }
     res.status(200).json({
         trainer: user.userName,
-        team: team,
+        team: team
     })
 }
 
 const setTeamToUser = async (req, res) => {
-    let [err, resp] = await to(teamsController.setTeam(req.user.userId,  req.body.team));
+    let [err, resp] = await to(teamsController.setTeam(req.user.userId, req.body.team));
     if (err) {
         return res.status(400).json({message: err});
     }
@@ -25,27 +26,29 @@ const setTeamToUser = async (req, res) => {
 
 const addPokemonToTeam = async (req, res) => {
     let pokemonName = req.body.name;
-    let [pokeApiError , pokeApiResponse] = await to(axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`));
+    let [pokeApiError, pokeApiResponse] = 
+        await to(axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`))
     if (pokeApiError) {
         return res.status(400).json({message: pokeApiError});
     }
     let pokemon = {
-        name: pokemonName,
-        pokedexNumber: pokeApiResponse.data.id,
+        name: pokemonName, 
+        pokedexNumber: pokeApiResponse.data.id
     }
-    let [errorAdd, respone] = await to(teamsController.addPokemon(req.user.userId,  pokemon));
+    let [errorAdd, response] = await to(teamsController.addPokemon(req.user.userId, pokemon));
+
     if (errorAdd) {
-        return res.status(400).json({message: 'You have already 6 Pokemons'});
+        return res.status(400).json({message: 'You have already 6 pokemon'});
     }
     res.status(201).json(pokemon);
 }
 
 const deletePokemonFromTeam = async (req, res) => {
-    let [err, resp] = await to(teamsController.deletePokemonAt(req.user.userId,  req.params.pokeid)); 
+    let [err, resp] = await to(teamsController.deletePokemonAt(req.user.userId, req.params.pokeid));
     if (err) {
         return res.status(400).json({message: err});
     }
-    res.status(200),send();
+    res.status(200).send();
 }
 
 exports.getTeamFromUser = getTeamFromUser;
